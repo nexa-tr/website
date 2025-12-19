@@ -1,4 +1,84 @@
 ---
-title: Blog 2
-date: 2025-12-10
+title: "Python’da Veri Tipleri"
+date: 2025-12-19
 ---
+
+Python’da veri tiplerini öğrenmenin en iyi yolu, onları doğrudan **komut satırında denemektir**. Python REPL (etkileşimli kabuk), yazdığın kodun sonucunu anında görmeni sağlar.
+
+Terminalden Python’u başlatalım:
+```bash
+python
+
+🔢 Sayılar (int, float)
+>>> a = 10
+>>> b = 3.5
+>>> type(a)
+output: <class 'int'>
+>>> type(b)
+output: <class 'float'>
+# Tam sayılar matematiksel işlemlerde, float ise ondalıklı hesaplamalarda kullanılır.
+
+--------------------------------------------------------------------------
+
+🔤 Metinler (str)
+>>> mesaj = "Nexa Topluluğu"
+>>> type(mesaj)
+output: <class 'str'>
+>>> mesaj.upper()
+output: 'NEXA TOPLULUĞU'
+# String’ler üzerinde fonksiyon çağırarak kolayca işlem yapabilirsin.
+
+--------------------------------------------------------------------------
+
+✅ Boolean
+>>> aktif_mi = True
+>>> type(aktif_mi)
+output: <class 'bool'>
+>>> 10 > 5
+output: True
+>>> 3 == 7
+output: False
+# Boolean veri tipi yalnızca iki değer alır: True ve False.
+# Koşulların ve karar mekanizmalarının temelidir.
+
+--------------------------------------------------------------------------
+
+📦 List
+>>> ekip = ["Görkem", "Kaan", "Mehmet"]
+>>> ekip.append("Emir")
+>>> ekip
+output: ['Görkem', 'Kaan', 'Mehmet', 'Emir']
+# List değiştirilebilir, ekleme-çıkarma yapılır.
+# [] ile kullanılır.
+
+--------------------------------------------------------------------------
+
+📦 Tuple
+>>> sabit = (1, 2, 3) 
+>>> sabit[0]
+output: 1
+# Tuple sabittir, değiştirilemez
+# () ile kullanılır.
+
+--------------------------------------------------------------------------
+
+🗂️ Dictionary
+>>> uye = {"isim": "Görkem", "rol": "Kurucu"}
+>>> uye["rol"]
+output: 'Kurucu'
+# Dictionary, anahtar–değer (key–value) mantığıyla çalışan bir veri tipidir.
+# Bir veriye isim vererek ulaşmanı sağlar.
+
+--------------------------------------------------------------------------
+
+🎯 Set
+>>> sayilar = {1, 2, 2, 3}
+>>> sayilar
+output: {1, 2, 3}
+# {} ile kullanılır. Benzersiz elemanlardan oluşur.
+
+--------------------------------------------------------------------------
+
+```
+
+Yazar: Görkem Ergüne (Kurucu)

@@ -1,20 +1,88 @@
 ---
-title: Engineering the Next.
-description: Nexa Topluluğu
+title: Network for Experimental Advanced Engineering
+description: Nexa Topluluğu — birlikte üret, öğren, geleceği inşa et.
 template: splash
 hero:
-  tagline: NEXA Topluluğuna hoş geldin!
+  tagline: Geleceği birlikte inşa ediyoruz.
   image:
-    file: ../../assets/houston.webp
+    file: ../../assets/NexaLogo3.png
   actions:
-    - text: Başlayalım
+    - text: İçeri Gir
       link: /bilgi/uyeler/
       icon: right-arrow
-    - text: Blog'u ziyaret et
+    - text: Blog
       link: /blog
       icon: external
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard, Steps } from '@astrojs/starlight/components';
 
+## 🚀 Güncel Durum
+
+Ekibimizin radarındaki en son gelişmeler ve üretimlerimiz.
+
+<CardGrid>
+  {/* SON PROJE KARTI */}
+  <Card title="Son Projemiz" icon="rocket">
+    **NEXA Web Sitesi - v1** Topluluğumuzun ilk web sitesi yayında!
+    <br />
+    [Projeyi İncele →](/projeler/proje-1)
+  </Card>
+
+  {/* SON DUYURU KARTI */}
+  <Card title="Son Duyuru" icon="pencil">
+    **2025 Aralık - Ekip Alımları** Ekibimize her departmandan yeni çalışma arkadaşları
+    <br />
+    [Başvuru Detayları →](/duyurular/ekip-alimlari-1)
+  </Card>
+</CardGrid>
+
+<CardGrid>
+  {/* BLOG YAZILARI - YAN YANA LİNK KARTLARI */}
+  <LinkCard
+    title="Blog: GitHub Projelerinde En Sık Kullanılan Git Komutları"
+    description="Özellikle GitHub kullanmaya yeni başlayanlar için en sık kullanılan Git komutlarını derledik."
+    href="/blog/blog-1"
+  />
+  <LinkCard
+    title="Blog: Python’da Veri Tipleri"
+    description="Yazılımın temeli, veri tiplerini Python üzerinden anlattıp örneklendirdik."
+    href="/blog/blog-2"
+  />
+</CardGrid>
+
+---
+
+## 🌊 Geçmişin İzleri
+
+NEXA: Kuruluştan Bugüne
+
+<Steps>
+1.  **Kuruluş (15 Aralık 2025):** Çarşamba günü Fizik1 dersinde ekip kurulma kararı verildi.
+2.  **İlk Resmi Proje():** .....
+3.  **İlk Ekip Buluşması():** .....
+4.  **Genişleme():** +50 üye
+5.  **Sosyal Medya():** +5000
+</Steps>
+
+---
+
+## 🛠️ Neden Nexa?
+
+<CardGrid stagger>
+<Card title="İnovasyon" icon="github">
+Geliştirdiğimiz projelerin %30’u günümüz ihtiyaçlarına, %70’i ise geleceğin problemlerine odaklanır. 
+  Verileri farklı, güvenilir ve daha gerçek hayat kaynaklardan toplayarak doğru şekilde analiz ederiz.
+</Card>
+
+
+<Card title="Güçlü Network" icon="discord">
+Ekibimiz, Türkiye’nin farklı üniversitelerinden ve çeşitli mühendislik bölümlerinden öğrencilerden oluşur. 
+  Ayrıca her ekip üyesi, alanında deneyimli akademik danışmanlar tarafından destek almaktadır.
+</Card>
+</CardGrid>
+
+---
+
+> "Günümüzde baktığımızda birçok iş yarım yamalak ya da hatalı yapılıyor. Biz, iyi mühendisler olarak bu hataları çözmek, işi doğru yapmak ve geleceğimizi sağlam temeller üzerine kurmak için buradayız." — **NEXA Team**

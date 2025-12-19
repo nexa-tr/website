@@ -1,4 +1,57 @@
 ---
-title: Blog 1
-date: 2025-12-10
+title: "GitHub Projelerinde En Sık Kullanılan Git Komutları"
+date: 2025-12-19
 ---
+
+GitHub kullanırken arka planda Git ile çalışırız. Git, projedeki değişiklikleri takip etmemizi sağlar; GitHub ise bu değişiklikleri çevrim içi olarak paylaşmamıza ve ekip hâlinde yönetmemize imkân tanır. Günlük projelerde Git’in tüm detaylarını bilmek gerekmez, ancak bazı komutlar vazgeçilmezdir.
+
+--------------------------------------------------------------------------
+Bir projeye başlarken ilk adım genellikle repoyu bilgisayarına almaktır:
+```bash
+git clone https://github.com/kullanici/proje.git
+```
+--------------------------------------------------------------------------
+
+Projede çalışırken hangi dosyaların değiştiğini görmek için:
+```bash
+git status
+```
+--------------------------------------------------------------------------
+
+Değişiklikleri kaydetmeden önce farkları incelemek istersen:
+```bash
+git diff
+```
+--------------------------------------------------------------------------
+
+Dosyaları commit’e hazırlamak için:
+```bash
+git add .
+```
+--------------------------------------------------------------------------
+
+Yapılan değişiklikleri kayda almak için:
+```bash
+git commit -m "Yeni özellik eklendi"
+```
+--------------------------------------------------------------------------
+
+Uzak depoya gönderim yapmak için:
+```bash
+git push
+```
+--------------------------------------------------------------------------
+
+Ekip arkadaşlarının yaptığı güncellemeleri almak için:
+```bash
+git pull
+```
+--------------------------------------------------------------------------
+
+Projede yapılan eski commit’leri görmek için:
+```bash
+git log
+
+```
+
+Yazar: Görkem Ergüne (Kurucu)
