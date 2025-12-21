@@ -29,7 +29,7 @@ export default defineConfig({
 						{ label: 'Üyelerimiz', slug: 'bilgi/uyeler' },
 						{ label: 'Biz Kimiz', slug: 'bilgi/hakkimizda' },
 						{ label: 'Proje Süreçleri', slug: 'bilgi/surec' },
-						{ label: 'Sıkça Sorular Sorular', slug: 'bilgi/sorular' },
+						{ label: 'Sıkça Sorulan Sorular', slug: 'bilgi/sorular' },
 					],
 				},
 				{
