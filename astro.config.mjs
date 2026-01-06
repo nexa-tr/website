@@ -40,7 +40,7 @@ export default defineConfig({
 						{ label: 'Proje 3', slug: 'projeler/proje-3' },
 						{ label: 'Proje 4', slug: 'projeler/proje-4' },
 					],
-				},
+				},			
 			]
 		}),
 	],
