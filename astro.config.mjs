@@ -21,6 +21,7 @@ export default defineConfig({
 					label: 'Duyurular',
 					items: [
 						{ label: 'Ekip Alımları - Aralık 2025', slug: 'duyurular/ekip-alimlari-1' },
+						{ label: 'Ekip Alımları - Şubat 2026', slug: 'duyurular/ekip-alimlari-2' },
 					],
 				},
 				{
