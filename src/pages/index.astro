@@ -1,0 +1,984 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const algorithms = [
+  {
+    id: 1,
+    name: "Collatz Conjecture",
+    tagline: "The Simplest Impossible Problem",
+    icon: "",
+    color: "#0ea5e9",
+    description: "Pick any positive integer. If it's even, divide by 2. If it's odd, multiply by 3 and add 1. Repeat. It ALWAYS reaches 1... but nobody on Earth can prove why. Mathematicians have checked every number up to 2^68 — still no proof.",
+    code: `function collatz(n) {
+  let steps = [n];
+  while (n !== 1) {
+    n = n % 2 === 0 ? n / 2 : 3 * n + 1;
+    steps.push(n);
+  }
+  return steps;
+}`,
+    funFact: "Paul Erdős said: 'Mathematics is not yet ready for such problems.' There's a $500 bounty on it — still unclaimed since 1937.",
+    complexity: "Unknown — that's the whole point"
+  },
+  {
+    id: 2,
+    name: "Floyd's Tortoise & Hare",
+    tagline: "Two Pointers, One Truth",
+    icon: "",
+    color: "#0284c7",
+    description: "How do you detect a cycle in a linked list using O(1) memory? Send two pointers — one moves 1 step, the other 2 steps. If there's a cycle, they MUST meet. It's mathematically inevitable. Then, to find where the cycle starts, reset one pointer to the head and move both at speed 1.",
+    code: `function detectCycle(head) {
+  let slow = head, fast = head;
+  while (fast?.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) {
+      slow = head;
+      while (slow !== fast) {
+        slow = slow.next;
+        fast = fast.next;
+      }
+      return slow; // cycle start
+    }
+  }
+  return null;
+}`,
+    funFact: "Robert Floyd never formally published this algorithm. It spread through oral tradition among computer scientists in the 1960s.",
+    complexity: "O(n) time, O(1) space"
+  },
+  {
+    id: 3,
+    name: "Fisher-Yates Shuffle",
+    tagline: "The Only Fair Shuffle",
+    icon: "",
+    color: "#0369a1",
+    description: "Most 'random' shuffles are biased. Fisher-Yates is the ONLY algorithm that gives every permutation exactly equal probability. Walk backwards through the array, swapping each element with a random one before it (including itself). That's it. Perfect randomness.",
+    code: `function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(
+      Math.random() * (i + 1)
+    );
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}`,
+    funFact: "A naive shuffle (swap each element with any random position) creates a biased distribution. For 3 elements, it produces 27 outcomes mapped to 6 permutations — impossible to distribute evenly.",
+    complexity: "O(n) time, O(1) space"
+  },
+  {
+    id: 4,
+    name: "Boyer-Moore Majority Vote",
+    tagline: "Cancellation Magic",
+    icon: "",
+    color: "#0ea5e9",
+    description: "Find the element that appears more than n/2 times in an array — using O(1) space. The trick? Keep a candidate and a counter. When you see your candidate, increment. Otherwise, decrement. When counter hits 0, switch candidates. The majority element always survives the cancellation war.",
+    code: `function majorityElement(nums) {
+  let candidate = null, count = 0;
+  for (const num of nums) {
+    if (count === 0) candidate = num;
+    count += num === candidate ? 1 : -1;
+  }
+  return candidate;
+}`,
+    funFact: "Imagine an arena where different numbers fight each other. Each fight eliminates one of each type. The majority element has more soldiers than all others combined — it always has survivors.",
+    complexity: "O(n) time, O(1) space"
+  },
+  {
+    id: 5,
+    name: "Sieve of Eratosthenes",
+    tagline: "2,200 Years of Prime Finding",
+    icon: "",
+    color: "#0284c7",
+    description: "Ancient Greek mathematician Eratosthenes invented this in ~240 BC. Start with all numbers. 2 is prime — cross out all its multiples. Next uncrossed number (3) is prime — cross out its multiples. Repeat. What survives is every prime number. Brutally simple, shockingly fast.",
+    code: `function sieve(limit) {
+  const primes = new Array(limit + 1)
+    .fill(true);
+  primes[0] = primes[1] = false;
+  for (let i = 2; i * i <= limit; i++) {
+    if (primes[i]) {
+      for (let j = i * i; j <= limit; j += i)
+        primes[j] = false;
+    }
+  }
+  return primes.flatMap(
+    (v, i) => v ? [i] : []
+  );
+}`,
+    funFact: "Eratosthenes also calculated Earth's circumference to within 2% accuracy using shadows and geometry. The man was a polymath machine.",
+    complexity: "O(n log log n) time"
+  },
+  {
+    id: 6,
+    name: "Kadane's Algorithm",
+    tagline: "Maximum Subarray in One Pass",
+    icon: "",
+    color: "#0369a1",
+    description: "Given an array of integers (positive and negative), find the contiguous subarray with the largest sum. Brute force is O(n³). Kadane does it in ONE PASS: at each position, either extend the current subarray or start fresh. That's the entire insight. Beautiful greed.",
+    code: `function maxSubarray(nums) {
+  let maxSum = nums[0];
+  let current = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    current = Math.max(
+      nums[i],
+      current + nums[i]
+    );
+    maxSum = Math.max(maxSum, current);
+  }
+  return maxSum;
+}`,
+    funFact: "This was originally a O(n log n) divide-and-conquer solution by Shamos. Jay Kadane stunned everyone by solving it in O(n) during a seminar — on the spot.",
+    complexity: "O(n) time, O(1) space"
+  },
+  {
+    id: 7,
+    name: "Binary Exponentiation",
+    tagline: "Powers in Logarithmic Time",
+    icon: "",
+    color: "#0ea5e9",
+    description: "Computing a^n normally takes n multiplications. Binary exponentiation does it in log(n). The secret: a^13 = a^8 × a^4 × a^1 (because 13 = 1101 in binary). Square the base repeatedly and multiply when the corresponding bit is 1. Used in all modern cryptography.",
+    code: `function power(base, exp, mod) {
+  let result = 1;
+  base %= mod;
+  while (exp > 0) {
+    if (exp % 2 === 1)
+      result = (result * base) % mod;
+    exp = Math.floor(exp / 2);
+    base = (base * base) % mod;
+  }
+  return result;
+}`,
+    funFact: "RSA encryption relies on this. When your browser shows that little lock icon, binary exponentiation is doing modular arithmetic with 2048-bit numbers behind the scenes.",
+    complexity: "O(log n) time"
+  },
+  {
+    id: 8,
+    name: "Reservoir Sampling",
+    tagline: "Random Pick from Infinity",
+    icon: "",
+    color: "#0284c7",
+    description: "You have a stream of unknown (possibly infinite) length. You need to pick exactly k items uniformly at random, but you can only pass through the data ONCE and can't store it all. Reservoir sampling: keep the first k items, then for each new item i, replace a random reservoir item with probability k/i. Proof: each item has exactly k/n chance.",
+    code: `function reservoirSample(stream, k) {
+  const reservoir = stream.slice(0, k);
+  for (let i = k; i < stream.length; i++){
+    const j = Math.floor(
+      Math.random() * (i + 1)
+    );
+    if (j < k) reservoir[j] = stream[i];
+  }
+  return reservoir;
+}`,
+    funFact: "Google uses reservoir sampling to select random search queries for analysis. They can't store every query — the stream never ends.",
+    complexity: "O(n) time, O(k) space"
+  },
+  {
+    id: 9,
+    name: "Euclidean Algorithm",
+    tagline: "The Oldest Algorithm Still in Use",
+    icon: "",
+    color: "#0369a1",
+    description: "Finding the Greatest Common Divisor. Euclid discovered this around 300 BC: GCD(a, b) = GCD(b, a mod b). Keep taking remainders until you hit 0. The last non-zero value is your GCD. It's the oldest known non-trivial algorithm and it's STILL the fastest way to compute GCD.",
+    code: `function gcd(a, b) {
+  while (b !== 0) {
+    [a, b] = [b, a % b];
+  }
+  return a;
+}
+// gcd(48, 18) → gcd(18, 12)
+//             → gcd(12, 6)
+//             → gcd(6, 0) → 6`,
+    funFact: "This algorithm is over 2,300 years old — older than the concept of zero in Western mathematics. Euclid described it with line segments, not numbers.",
+    complexity: "O(log(min(a, b))) time"
+  },
+  {
+    id: 10,
+    name: "KMP String Matching",
+    tagline: "Never Look Back",
+    icon: "",
+    color: "#0ea5e9",
+    description: "Searching for a pattern in a string? Naive approach backtracks on every mismatch. KMP builds a 'failure function' — a table of how far back you ACTUALLY need to go. The result? You never re-examine a character you've already seen. The text pointer only moves forward.",
+    code: `function kmpSearch(text, pattern) {
+  const lps = buildLPS(pattern);
+  let i = 0, j = 0;
+  while (i < text.length) {
+    if (text[i] === pattern[j]) {
+      i++; j++;
+      if (j === pattern.length) return i - j;
+    } else if (j > 0) {
+      j = lps[j - 1]; // don't reset i!
+    } else {
+      i++;
+    }
+  }
+  return -1;
+}`,
+    funFact: "Three people (Knuth, Morris, Pratt) independently discovered this in 1970. Knuth's version came from automata theory, Morris's from a text editor bug, and Pratt's from his PhD research.",
+    complexity: "O(n + m) time, O(m) space"
+  }
+];
+---
+
+<Layout title="Algorithm Arcade — 10 Mind-Bending Algorithms">
+  <!-- Animated background -->
+  <div class="bg-grid"></div>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">10 ALGORITHMS</div>
+      <h1>
+        <span class="gradient-text">Algorithm</span>
+        <span class="gradient-text-alt">Arcade</span>
+      </h1>
+      <p class="hero-subtitle">
+        Mind-bending algorithms that will change how you think about code.
+        <br/>Each one is a small miracle of human ingenuity.
+      </p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number">10</span>
+          <span class="stat-label">Algorithms</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number">2300+</span>
+          <span class="stat-label">Years of History</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number">&infin;</span>
+          <span class="stat-label">Brain Cells Lost</span>
+        </div>
+      </div>
+      <a href="#algorithms" class="scroll-cta">
+        <span>Start Exploring</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+      </a>
+    </div>
+    <div class="hero-decoration">
+      <div class="orbit orbit-1">
+        <div class="orbit-dot"></div>
+      </div>
+      <div class="orbit orbit-2">
+        <div class="orbit-dot"></div>
+      </div>
+      <div class="orbit orbit-3">
+        <div class="orbit-dot"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Algorithm Cards -->
+  <main id="algorithms" class="algorithms">
+    <div class="section-header">
+      <h2>The Collection</h2>
+      <p>Click any card to reveal the code and secrets within</p>
+    </div>
+
+    <div class="card-grid">
+      {algorithms.map((algo) => (
+        <article class="algo-card" data-id={algo.id}>
+          <div class="card-front">
+            <div class="card-number">#{String(algo.id).padStart(2, '0')}</div>
+            <div class="card-icon">{algo.icon}</div>
+            <h3>{algo.name}</h3>
+            <p class="card-tagline">{algo.tagline}</p>
+            <p class="card-desc">{algo.description}</p>
+            <div class="card-complexity">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+              </svg>
+              {algo.complexity}
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="card-number">#{String(algo.id).padStart(2, '0')}</div>
+            <h3>{algo.name}</h3>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="code-dot red"></span>
+                <span class="code-dot yellow"></span>
+                <span class="code-dot green"></span>
+                <span class="code-title">algorithm.js</span>
+              </div>
+              <pre><code>{algo.code}</code></pre>
+            </div>
+            <div class="fun-fact">
+              <span class="fun-fact-label">Fun Fact</span>
+              <p>{algo.funFact}</p>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </main>
+
+  <!-- Collatz Interactive Section -->
+  <section class="interactive-section">
+    <div class="section-header">
+      <h2>Try It Yourself</h2>
+      <p>Enter any positive integer and watch the Collatz Conjecture in action</p>
+    </div>
+    <div class="collatz-playground">
+      <div class="collatz-input-wrap">
+        <input type="number" id="collatz-input" min="1" max="10000000" value="27" placeholder="Enter a number..." />
+        <button id="collatz-btn">Run</button>
+      </div>
+      <div class="collatz-info">
+        <span id="collatz-steps">Steps: —</span>
+        <span id="collatz-peak">Peak: —</span>
+      </div>
+      <div class="collatz-viz" id="collatz-viz"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p class="footer-text">
+        Built with curiosity and <a href="https://astro.build" target="_blank" rel="noopener">Astro</a>
+      </p>
+      <p class="footer-sub">Algorithms are humanity's most beautiful inventions.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Card flip interaction
+    document.querySelectorAll('.algo-card').forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.toggle('flipped');
+      });
+    });
+
+    // Collatz visualization
+    function runCollatz(n) {
+      const steps = [n];
+      while (n !== 1 && steps.length < 1000) {
+        n = n % 2 === 0 ? n / 2 : 3 * n + 1;
+        steps.push(n);
+      }
+      return steps;
+    }
+
+    function visualizeCollatz(steps) {
+      const viz = document.getElementById('collatz-viz');
+      const stepsEl = document.getElementById('collatz-steps');
+      const peakEl = document.getElementById('collatz-peak');
+      if (!viz || !stepsEl || !peakEl) return;
+
+      const peak = Math.max(...steps);
+      stepsEl.textContent = `Steps: ${steps.length - 1}`;
+      peakEl.textContent = `Peak: ${peak.toLocaleString()}`;
+
+      viz.innerHTML = '';
+      const maxVal = Math.max(...steps);
+
+      steps.forEach((val, i) => {
+        const bar = document.createElement('div');
+        bar.className = 'collatz-bar';
+        const height = Math.max(4, (val / maxVal) * 200);
+        bar.style.height = height + 'px';
+        bar.style.animationDelay = (i * 15) + 'ms';
+        bar.title = `Step ${i}: ${val}`;
+
+        const hue = 200 - (val / maxVal) * 20;
+        const lightness = 50 + (1 - val / maxVal) * 30;
+        bar.style.background = `hsl(${hue}, 80%, ${lightness}%)`;
+        viz.appendChild(bar);
+      });
+    }
+
+    document.getElementById('collatz-btn')?.addEventListener('click', () => {
+      const input = document.getElementById('collatz-input');
+      if (!input) return;
+      const val = parseInt((input as HTMLInputElement).value);
+      if (val > 0 && val <= 10000000) {
+        visualizeCollatz(runCollatz(val));
+      }
+    });
+
+    // Run default
+    visualizeCollatz(runCollatz(27));
+
+    // Intersection Observer for card animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('.algo-card').forEach(card => {
+      observer.observe(card);
+    });
+  </script>
+</Layout>
+
+<style>
+  /* Background Grid */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(14, 165, 233, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14, 165, 233, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--ice) 0%, var(--white) 100%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    padding: 0.4rem 1.2rem;
+    background: var(--light-blue-50);
+    color: var(--light-blue-500);
+    border: 1px solid var(--light-blue-100);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 10vw, 7rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .gradient-text {
+    display: block;
+    background: linear-gradient(135deg, var(--light-blue-400), var(--light-blue-600));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-alt {
+    display: block;
+    background: linear-gradient(135deg, var(--dark), var(--darker));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.15rem;
+    color: var(--text-light);
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--light-blue-400);
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--light-blue-100);
+  }
+
+  .scroll-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    background: linear-gradient(135deg, var(--light-blue-400), var(--light-blue-500));
+    color: white;
+    text-decoration: none;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
+  }
+
+  .scroll-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(14, 165, 233, 0.4);
+  }
+
+  .scroll-cta svg {
+    animation: bounce 2s ease infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+
+  /* Hero Orbits */
+  .hero-decoration {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    pointer-events: none;
+  }
+
+  .orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid var(--light-blue-100);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .orbit-1 { width: 300px; height: 300px; animation: spin 20s linear infinite; }
+  .orbit-2 { width: 450px; height: 450px; animation: spin 30s linear infinite reverse; }
+  .orbit-3 { width: 600px; height: 600px; animation: spin 40s linear infinite; }
+
+  .orbit-dot {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: var(--light-blue-300);
+    border-radius: 50%;
+    transform: translateX(-50%);
+  }
+
+  @keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* Section Headers */
+  .section-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .section-header h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--darker);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-header p {
+    color: var(--text-light);
+    font-size: 1.05rem;
+  }
+
+  /* Algorithm Cards */
+  .algorithms {
+    padding: 6rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 2rem;
+  }
+
+  .algo-card {
+    perspective: 1200px;
+    min-height: 480px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .algo-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .algo-card.visible:nth-child(2) { transition-delay: 0.1s; }
+  .algo-card.visible:nth-child(3) { transition-delay: 0.2s; }
+  .algo-card.visible:nth-child(4) { transition-delay: 0.1s; }
+  .algo-card.visible:nth-child(5) { transition-delay: 0.2s; }
+  .algo-card.visible:nth-child(6) { transition-delay: 0.3s; }
+
+  .card-front,
+  .card-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    padding: 2rem;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--light-blue-100);
+    overflow: hidden;
+  }
+
+  .card-front {
+    background: linear-gradient(145deg, var(--white), var(--ice));
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--card-shadow);
+  }
+
+  .card-front:hover {
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  .card-back {
+    background: linear-gradient(145deg, var(--darker), #0b3d5e);
+    transform: rotateY(180deg);
+    color: #e0f2fe;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .algo-card.flipped .card-front {
+    transform: rotateY(-180deg);
+  }
+
+  .algo-card.flipped .card-back {
+    transform: rotateY(0);
+  }
+
+  .card-number {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--light-blue-300);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-back .card-number {
+    color: rgba(186, 230, 253, 0.5);
+  }
+
+  .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    filter: grayscale(0);
+  }
+
+  .card-front h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--darker);
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.01em;
+  }
+
+  .card-back h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--light-blue-100);
+    margin-bottom: 0.25rem;
+  }
+
+  .card-tagline {
+    font-size: 0.85rem;
+    color: var(--light-blue-400);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  .card-desc {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .card-complexity {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+    padding: 0.4rem 0.8rem;
+    background: var(--light-blue-50);
+    color: var(--light-blue-500);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    width: fit-content;
+  }
+
+  /* Code Block */
+  .code-block {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.6rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .code-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .code-dot.red { background: #ff5f57; }
+  .code-dot.yellow { background: #ffbd2e; }
+  .code-dot.green { background: #28ca41; }
+
+  .code-title {
+    margin-left: 0.5rem;
+    font-size: 0.7rem;
+    color: rgba(186, 230, 253, 0.4);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .code-block pre {
+    padding: 1rem;
+    overflow-x: auto;
+    font-size: 0.72rem;
+    line-height: 1.6;
+  }
+
+  .code-block code {
+    color: #bae6fd;
+  }
+
+  /* Fun Fact */
+  .fun-fact {
+    background: rgba(14, 165, 233, 0.1);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    border-left: 3px solid var(--light-blue-400);
+  }
+
+  .fun-fact-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--light-blue-300);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .fun-fact p {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: rgba(224, 242, 254, 0.8);
+  }
+
+  /* Interactive Section */
+  .interactive-section {
+    padding: 5rem 2rem;
+    background: linear-gradient(180deg, var(--white) 0%, var(--ice) 100%);
+  }
+
+  .collatz-playground {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--white);
+    border: 1px solid var(--light-blue-100);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: var(--card-shadow);
+  }
+
+  .collatz-input-wrap {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .collatz-input-wrap input {
+    flex: 1;
+    padding: 0.75rem 1.25rem;
+    border: 2px solid var(--light-blue-100);
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--darker);
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--ice);
+  }
+
+  .collatz-input-wrap input:focus {
+    border-color: var(--light-blue-300);
+  }
+
+  .collatz-input-wrap button {
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, var(--light-blue-400), var(--light-blue-500));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .collatz-input-wrap button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+  }
+
+  .collatz-info {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text-light);
+  }
+
+  .collatz-viz {
+    display: flex;
+    align-items: flex-end;
+    gap: 1px;
+    height: 220px;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    border-radius: 8px;
+  }
+
+  :global(.collatz-bar) {
+    min-width: 3px;
+    flex: 1;
+    max-width: 12px;
+    border-radius: 2px 2px 0 0;
+    animation: barGrow 0.4s ease-out forwards;
+    opacity: 0;
+    transform-origin: bottom;
+  }
+
+  @keyframes barGrow {
+    from {
+      opacity: 0;
+      transform: scaleY(0);
+    }
+    to {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+
+  /* Footer */
+  .footer {
+    padding: 3rem 2rem;
+    text-align: center;
+    border-top: 1px solid var(--light-blue-50);
+  }
+
+  .footer-text {
+    color: var(--text-light);
+    font-size: 0.9rem;
+  }
+
+  .footer-text a {
+    color: var(--light-blue-400);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .footer-text a:hover {
+    text-decoration: underline;
+  }
+
+  .footer-sub {
+    color: var(--light-blue-200);
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+    font-style: italic;
+  }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    .card-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-stats {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stat-divider {
+      width: 40px;
+      height: 1px;
+    }
+
+    .hero-decoration {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .algorithms {
+      padding: 3rem 1rem;
+    }
+
+    .card-front,
+    .card-back {
+      padding: 1.5rem;
+    }
+
+    .collatz-playground {
+      padding: 1.25rem;
+    }
+  }
+</style>
